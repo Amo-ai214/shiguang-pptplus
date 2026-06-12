@@ -259,6 +259,7 @@ h3 {
   line-height: 1.2;
   padding: 13px 18px;
   text-align: center;
+  text-shadow: none;
   transition:
     transform 180ms ease,
     background 180ms ease,
