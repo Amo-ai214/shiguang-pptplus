@@ -674,17 +674,31 @@
                 请补充其他交付格式
                 <input name="deliverablesOther" type="text" placeholder="例如：Keynote / 16:9 图片长图 / 源素材包" />
               </label>
-              <label class="file-drop">
-                <span>上传资料</span>
-                <small>支持 PPT、Word、PDF、图片、压缩包等常见资料，可多选。</small>
-                <input
-                  id="fileInput"
-                  name="files"
-                  type="file"
-                  multiple
-                  accept=".ppt,.pptx,.doc,.docx,.pdf,.png,.jpg,.jpeg,.webp,.gif,.zip,.rar,.7z,.xls,.xlsx,.csv"
-                />
-              </label>
+              <div class="upload-group" aria-label="上传资料">
+                <p class="upload-help">手机端上传 Word、PDF、PPT 或压缩包时，请点“上传文档资料”；上传截图、照片、参考图时，再点“上传图片资料”。</p>
+                <label class="file-drop">
+                  <span>上传文档资料</span>
+                  <small>PPT、Word、PDF、Excel、ZIP、RAR、7z 等文件，可多选。</small>
+                  <input
+                    id="documentFileInput"
+                    name="documentFiles"
+                    type="file"
+                    multiple
+                    accept=".ppt,.pptx,.doc,.docx,.pdf,.zip,.rar,.7z,.xls,.xlsx,.csv,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/plain,text/csv,application/zip,application/x-zip-compressed,application/vnd.rar,application/x-7z-compressed"
+                  />
+                </label>
+                <label class="file-drop">
+                  <span>上传图片资料</span>
+                  <small>截图、照片、参考图等图片，可多选。</small>
+                  <input
+                    id="imageFileInput"
+                    name="imageFiles"
+                    type="file"
+                    multiple
+                    accept=".png,.jpg,.jpeg,.webp,.gif,image/png,image/jpeg,image/webp,image/gif"
+                  />
+                </label>
+              </div>
               <ul id="fileList" class="file-list" aria-live="polite"></ul>
               <label class="confirm-line">
                 <input name="revisionConfirm" type="checkbox" required />

@@ -13,7 +13,8 @@
   const selectedStylesText = document.getElementById("selectedStylesText");
   const selectedStylesInput = document.getElementById("selectedStylesInput");
   const requestForm = document.getElementById("requestForm");
-  const fileInput = document.getElementById("fileInput");
+  const documentFileInput = document.getElementById("documentFileInput");
+  const imageFileInput = document.getElementById("imageFileInput");
   const fileList = document.getElementById("fileList");
   const summaryList = document.getElementById("summaryList");
   const formStatus = document.getElementById("formStatus");
@@ -57,7 +58,7 @@
       deliverables,
       deliverablesOther,
       revisionConfirm: formData.get("revisionConfirm") === "on",
-      files: Array.from(fileInput.files || [])
+      files: getUploadedFiles()
     };
   }
 
@@ -76,6 +77,13 @@
     if (!bytes) return "0 KB";
     if (bytes < 1024 * 1024) return `${Math.ceil(bytes / 1024)} KB`;
     return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  function getUploadedFiles() {
+    return [
+      ...Array.from(documentFileInput.files || []),
+      ...Array.from(imageFileInput.files || [])
+    ];
   }
 
   function withOther(value, otherValue) {
@@ -150,7 +158,7 @@
   }
 
   function renderFiles() {
-    const files = Array.from(fileInput.files || []);
+    const files = getUploadedFiles();
     fileList.innerHTML = "";
 
     if (!files.length) {
@@ -448,7 +456,8 @@ ${fileLines}
   requestForm.addEventListener("input", updateSummary);
   requestForm.addEventListener("change", updateSummary);
   requestForm.addEventListener("submit", createZipPackage);
-  fileInput.addEventListener("change", renderFiles);
+  documentFileInput.addEventListener("change", renderFiles);
+  imageFileInput.addEventListener("change", renderFiles);
   copyWechat.addEventListener("click", copyWechatNumber);
   mobileCopyWechat.addEventListener("click", copyWechatNumber);
 
