@@ -17,6 +17,10 @@
   const imageFileInput = document.getElementById("imageFileInput");
   const fileList = document.getElementById("fileList");
   const summaryList = document.getElementById("summaryList");
+  const priceTotal = document.getElementById("priceTotal");
+  const priceBreakdown = document.getElementById("priceBreakdown");
+  const formPriceTotal = document.getElementById("formPriceTotal");
+  const formPriceBreakdown = document.getElementById("formPriceBreakdown");
   const formStatus = document.getElementById("formStatus");
   const mailButton = document.getElementById("mailButton");
   const copyWechat = document.getElementById("copyWechat");
@@ -44,6 +48,7 @@
       materialStatusOther: clean(formData.get("materialStatusOther")),
       serviceType: clean(formData.get("serviceType")),
       serviceTypeOther: clean(formData.get("serviceTypeOther")),
+      qualityTier: clean(formData.get("qualityTier")) || "standard",
       pageCount: clean(formData.get("pageCount")),
       deadline: clean(formData.get("deadline")),
       urgency: clean(formData.get("urgency")),
@@ -96,6 +101,86 @@
     return data.deliverables
       .map((item) => (item === "其他" && data.deliverablesOther ? `其他：${data.deliverablesOther}` : item))
       .join("、");
+  }
+
+  function parsePageCount(value) {
+    const match = clean(value).match(/\d+/);
+    return match ? Math.max(1, Number(match[0])) : 0;
+  }
+
+  function getQualityLabel(tier) {
+    return tier === "chief" ? "首席制作" : "普通制作";
+  }
+
+  function isRush(urgency) {
+    return urgency === "比较急" || urgency === "非常急，需要优先沟通";
+  }
+
+  function calculatePrice(data) {
+    const pages = parsePageCount(data.pageCount);
+    const tier = data.qualityTier === "chief" ? "chief" : "standard";
+    const rush = isRush(data.urgency);
+    const hasPdf = data.deliverables.includes("PDF 预览");
+    const hasScript = data.deliverables.includes("演讲稿");
+
+    if (!pages) {
+      return {
+        pages,
+        tier,
+        total: 0,
+        ready: false,
+        label: "填写页数后计算",
+        breakdown: "请输入预计页数，系统会自动估算制作费用。",
+        paymentNote: "首席制作先付 50% 定金；普通制作直接支付全款。"
+      };
+    }
+
+    let baseRate = 0;
+    if (tier === "chief") {
+      baseRate = 19;
+    } else if (pages <= 10) {
+      baseRate = 3;
+    } else if (pages <= 20) {
+      baseRate = 3.5;
+    } else {
+      baseRate = 4;
+    }
+
+    const base = pages * baseRate;
+    const rushRate = rush ? (tier === "chief" ? 5 : 1) : 0;
+    const rushFee = pages * rushRate;
+    const pdfFee = hasPdf ? 1 : 0;
+    const scriptFee = hasScript ? 20 : 0;
+    const total = base + rushFee + pdfFee + scriptFee;
+    const deliveryNote = rush
+      ? tier === "chief"
+        ? "首席加急按一天内做完估算"
+        : "普通加急按半小时内做完估算"
+      : "未选择加急";
+    const paymentNote = tier === "chief"
+      ? `首席制作先付 50% 定金，预计定金 ${formatMoney(total / 2)}。`
+      : "普通制作直接支付全款。";
+
+    return {
+      pages,
+      tier,
+      baseRate,
+      base,
+      rush,
+      rushRate,
+      rushFee,
+      pdfFee,
+      scriptFee,
+      total,
+      ready: true,
+      label: `${formatMoney(total)} 起`,
+      breakdown: `${getQualityLabel(tier)} ${pages} 页 × ${baseRate}r/页 = ${formatMoney(base)}；${deliveryNote}${rushFee ? ` + ${formatMoney(rushFee)}` : ""}；PDF 预览 ${pdfFee ? "+1r" : "未选"}；演讲稿 ${scriptFee ? "+20r" : "未选"}。${paymentNote}`,
+      paymentNote
+    };
+  }
+
+  function formatMoney(value) {
+    return `${Number(value).toFixed(Number.isInteger(value) ? 0 : 1)}r`;
   }
 
   function updateSelectedStyles() {
@@ -195,22 +280,33 @@
       ? `${data.files.length} 个文件，约 ${formatFileSize(data.files.reduce((sum, file) => sum + file.size, 0))}`
       : "暂未上传";
     const styleText = data.selectedStyles.length ? data.selectedStyles.join("、") : "暂未选择";
+    const price = calculatePrice(data);
 
     summaryList.innerHTML = "";
     summaryList.append(
       setSummaryItem("项目", data.projectName || "待填写"),
       setSummaryItem("用途", withOther(data.purpose, data.purposeOther) || "待选择"),
       setSummaryItem("服务", withOther(data.serviceType, data.serviceTypeOther) || "待选择"),
+      setSummaryItem("品质", getQualityLabel(data.qualityTier)),
       setSummaryItem("截止", data.deadline ? data.deadline.replace("T", " ") : "待填写"),
       setSummaryItem("风格", styleText),
       setSummaryItem("资料", fileText)
     );
+    [
+      [priceTotal, priceBreakdown],
+      [formPriceTotal, formPriceBreakdown]
+    ].forEach(([totalElement, breakdownElement]) => {
+      if (!totalElement || !breakdownElement) return;
+      totalElement.textContent = price.label;
+      breakdownElement.textContent = price.breakdown;
+    });
   }
 
   function buildRequirementMarkdown(data) {
     const fileLines = data.files.length
       ? data.files.map((file) => `- ${file.name}（${formatFileSize(file.size)}）`).join("\n")
       : "- 暂未上传文件";
+    const price = calculatePrice(data);
 
     return `# 拾光工作室 PPT 制作需求
 
@@ -225,6 +321,7 @@
 - PPT 用途：${withOther(data.purpose, data.purposeOther) || "未选择"}
 - 当前资料状态：${withOther(data.materialStatus, data.materialStatusOther) || "未选择"}
 - 服务需求：${withOther(data.serviceType, data.serviceTypeOther) || "未选择"}
+- 制作品质：${getQualityLabel(data.qualityTier)}
 - 预计页数：${data.pageCount || "未填写"}
 - 截止时间：${data.deadline ? data.deadline.replace("T", " ") : "未填写"}
 - 是否加急：${data.urgency || "未选择"}
@@ -244,6 +341,11 @@
 ## 交付相关
 - 需要的交付格式：${getDeliverablesText(data) || "未选择"}
 - 修改范围确认：${data.revisionConfirm ? "已确认" : "未确认"}
+
+## 价格估算
+- 预计总价：${price.ready ? price.label : "未计算"}
+- 计算说明：${price.breakdown}
+- 支付说明：首席制作先付 50% 的定金。普通制作直接支付全款。
 
 ## 上传文件清单
 ${fileLines}
@@ -272,7 +374,9 @@ ${fileLines}
       `项目名称：${data.projectName || "未填写"}`,
       `PPT 用途：${withOther(data.purpose, data.purposeOther) || "未选择"}`,
       `服务需求：${withOther(data.serviceType, data.serviceTypeOther) || "未选择"}`,
+      `制作品质：${getQualityLabel(data.qualityTier)}`,
       `预计页数：${data.pageCount || "未填写"}`,
+      `价格估算：${calculatePrice(data).ready ? calculatePrice(data).label : "未计算"}`,
       `截止时间：${data.deadline ? data.deadline.replace("T", " ") : "未填写"}`,
       `微信号：${data.wechat || "未填写"}`,
       "",

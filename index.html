@@ -106,7 +106,7 @@
         <a href="#studio-advantages">优势</a>
         <a href="#style-picker">风格</a>
         <a href="#request-pack">提交</a>
-        <a href="#pricing">价格</a>
+        <a href="#designer-contact">设计师</a>
       </nav>
     </header>
 
@@ -136,14 +136,19 @@
           </div>
           <div class="slide-stage" role="img" aria-label="PPT美化案例视觉样机">
             <div class="slide-main">
-              <span class="slide-label">路演计划书</span>
+              <span class="slide-label">需求整理工作台</span>
               <strong>清晰结构</strong>
-              <p>重点页面、图表、结论层级一次理顺。</p>
+              <p>先把资料、重点、页数和交付方式理顺，再进入视觉设计。</p>
+              <div class="structure-map" aria-hidden="true">
+                <span><b>资料归类</b><i></i></span>
+                <span><b>逻辑重排</b><i></i></span>
+                <span><b>视觉落点</b><i></i></span>
+              </div>
             </div>
             <div class="slide-side">
-              <span></span>
-              <span></span>
-              <span></span>
+              <span><b>页数</b><small>自动估价</small></span>
+              <span><b>风格</b><small>首席可选</small></span>
+              <span><b>资料</b><small>本地打包</small></span>
             </div>
           </div>
           <div class="workflow-card">
@@ -265,6 +270,7 @@
           <div class="style-heading-actions">
             <p>
               可以勾选你喜欢的参考方向，我会根据你选择的风格进行设计。这个不是必填项，如果没有明确想法，也可以直接提交需求。
+              <strong>首席制作可选参考风格，会按选择方向做更完整的视觉定制。</strong>
             </p>
             <button class="button button-primary style-gallery-trigger" type="button" data-open-style-gallery>
               打开参考风格图库
@@ -593,8 +599,15 @@
                   <input name="serviceTypeOther" type="text" placeholder="例如：只做封面和目录页" />
                 </label>
                 <label>
+                  制作品质
+                  <select name="qualityTier" required>
+                    <option value="standard">普通制作</option>
+                    <option value="chief">首席制作（对标市面 50r/页水准）</option>
+                  </select>
+                </label>
+                <label>
                   预计页数
-                  <input name="pageCount" type="text" placeholder="例如：20 页左右" />
+                  <input name="pageCount" type="number" min="1" step="1" inputmode="numeric" placeholder="例如：20" required />
                 </label>
                 <label>
                   截止时间
@@ -700,6 +713,14 @@
                 </label>
               </div>
               <ul id="fileList" class="file-list" aria-live="polite"></ul>
+              <div class="price-estimator" aria-live="polite">
+                <div>
+                  <span>系统估算总价</span>
+                  <strong id="formPriceTotal">填写页数后计算</strong>
+                </div>
+                <p id="formPriceBreakdown">选择制作品质、是否加急和交付格式后，系统会自动估算费用。</p>
+                <small>首席制作先付 50% 的定金。普通制作直接支付全款。</small>
+              </div>
               <label class="confirm-line">
                 <input name="revisionConfirm" type="checkbox" required />
                 <span>我已了解：初稿完成后可进行合理范围内修改；大幅新增内容、推翻风格、临时加页等情况可能需要重新评估。</span>
@@ -737,6 +758,11 @@
                   <dd>暂未上传</dd>
                 </div>
               </dl>
+              <div class="price-card" aria-live="polite">
+                <span>预计总价</span>
+                <strong id="priceTotal">填写页数后计算</strong>
+                <p id="priceBreakdown">选择制作品质、是否加急和交付格式后，系统会自动估算费用。</p>
+              </div>
               <div class="privacy-note">
                 <strong>隐私说明</strong>
                 <p>ZIP 需求包在你的浏览器本地生成。页面不会把文件上传到公开服务器。</p>
@@ -746,19 +772,24 @@
         </div>
       </section>
 
-      <section id="pricing" class="section-shell pricing-section" aria-labelledby="pricing-title">
-        <div class="pricing-copy">
-          <p class="section-note">报价前先看资料</p>
-          <h2 id="pricing-title">价格怎么确认？</h2>
+      <section id="designer-contact" class="section-shell designer-section" aria-labelledby="designer-title">
+        <div class="designer-copy">
+          <p class="section-note">后续对接联系</p>
+          <h2 id="designer-title">添加对接设计师</h2>
           <p>
-            PPT 报价会根据页数、复杂程度、是否加急、是否需要内容梳理、是否需要图表重绘等因素综合评估。你可以先提交需求包，我会根据资料给出具体报价。
+            需求包生成后，可以添加设计师微信继续确认资料、排期、定金和修改范围。页面内价格为按规则自动估算，最终以对接确认后的内容为准。
           </p>
+          <div class="pricing-rules" aria-label="价格计算规则">
+            <span>普通制作：10 页内 3r/页，11-20 页 3.5r/页，21 页以上 4r/页</span>
+            <span>首席制作：19r/页；加急普通 +1r/页，首席 +5r/页</span>
+            <span>PDF 预览 +1r，演讲稿 +20r</span>
+          </div>
         </div>
         <div class="contact-card">
-          <span>微信号 / 手机</span>
+          <span>设计师微信 / 电话</span>
           <strong>15307003711</strong>
           <button id="copyWechat" class="button button-primary" type="button">复制微信号</button>
-          <p id="copyStatus" role="status" aria-live="polite">复制后打开微信添加，沟通页数、时间和报价。</p>
+          <p id="copyStatus" role="status" aria-live="polite">复制后打开微信添加，沟通页数、时间、定金和交付细节。</p>
         </div>
       </section>
 
@@ -786,7 +817,7 @@
           </details>
           <details>
             <summary>价格怎么确定？</summary>
-            <p>报价会根据页数、复杂程度、是否加急、是否需要内容梳理和图表重绘等因素综合评估。</p>
+            <p>页面会按页数、制作品质、是否加急和交付格式自动估算总价。首席制作先付 50% 定金，普通制作直接支付全款。</p>
           </details>
           <details>
             <summary>很着急可以加急吗？</summary>

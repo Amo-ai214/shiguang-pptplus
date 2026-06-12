@@ -187,7 +187,7 @@ summary {
 
 .hero-copy,
 .section-heading,
-.pricing-copy {
+.designer-copy {
   text-shadow:
     0 1px 0 oklch(1 0 0 / 0.9),
     0 0 18px oklch(1 0 0 / 0.95),
@@ -379,6 +379,28 @@ h3 {
   color: oklch(1 0 0 / 0.84);
 }
 
+.structure-map {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.structure-map span {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  color: oklch(1 0 0 / 0.9);
+  font-size: 0.86rem;
+  font-weight: 850;
+}
+
+.structure-map i {
+  height: 7px;
+  border-radius: 999px;
+  background: oklch(1 0 0 / 0.24);
+}
+
 .slide-side {
   display: grid;
   gap: 10px;
@@ -386,8 +408,23 @@ h3 {
 }
 
 .slide-side span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
   border-radius: 10px;
   background: linear-gradient(135deg, var(--accent-soft), oklch(0.98 0.01 62));
+  padding: 12px;
+}
+
+.slide-side b {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.slide-side small {
+  color: var(--muted);
+  font-weight: 700;
 }
 
 .workflow-card {
@@ -941,6 +978,52 @@ input[readonly] {
   white-space: nowrap;
 }
 
+.price-estimator,
+.price-card {
+  display: grid;
+  gap: 10px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  padding: 16px;
+}
+
+.price-estimator {
+  margin: 14px 0 16px;
+}
+
+.price-estimator div,
+.price-card {
+  align-items: start;
+}
+
+.price-estimator span,
+.price-card span {
+  color: var(--primary-strong);
+  font-size: 0.88rem;
+  font-weight: 850;
+}
+
+.price-estimator strong,
+.price-card strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.price-estimator p,
+.price-card p,
+.price-estimator small {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.price-estimator small {
+  font-weight: 800;
+}
+
 .confirm-line {
   border-radius: 12px;
   color: var(--muted);
@@ -1015,17 +1098,32 @@ input[readonly] {
   margin: 6px 0 0;
 }
 
-.pricing-section {
+.designer-section {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 330px;
   gap: 24px;
   align-items: center;
 }
 
-.pricing-copy p:not(.section-note) {
+.designer-copy p:not(.section-note) {
   max-width: 48rem;
   color: var(--muted);
   font-size: 1.05rem;
+}
+
+.pricing-rules {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.pricing-rules span {
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 700;
+  line-height: 1.45;
+  padding: 12px 14px;
 }
 
 .contact-card {
@@ -1126,7 +1224,7 @@ input[readonly] {
   .hero,
   .section-heading-wide,
   .request-layout,
-  .pricing-section {
+  .designer-section {
     grid-template-columns: 1fr;
   }
 
@@ -1266,7 +1364,7 @@ input[readonly] {
     width: 100%;
   }
 
-  .pricing-section {
+  .designer-section {
     align-items: stretch;
   }
 
