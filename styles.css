@@ -16,6 +16,7 @@
   --shadow: 0 6px 14px oklch(0.26 0.04 52 / 0.08);
   --max: 1180px;
   --header-height: 74px;
+  --z-modal: 50;
 }
 
 * {
@@ -25,12 +26,14 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 18px);
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
   background: transparent;
   color: var(--ink);
+  overflow-x: hidden;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -436,6 +439,19 @@ h3 {
   gap: 28px;
 }
 
+.style-heading-actions {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.style-heading-actions > p {
+  max-width: 44rem;
+  margin: 0;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
 .problem-list,
 .advantage-grid {
   display: grid;
@@ -607,6 +623,193 @@ h3 {
   background: var(--accent-soft);
   margin-top: 16px;
   padding: 14px 16px;
+}
+
+.style-gallery-modal[hidden] {
+  display: none;
+}
+
+.style-gallery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background:
+    linear-gradient(180deg, oklch(1 0 0 / 0.86), oklch(0.985 0.006 62 / 0.9)),
+    url("assets/hero-bg-mobile.jpg");
+  background-position: center;
+  background-size: cover;
+  color: var(--ink);
+}
+
+.style-gallery-top {
+  border-bottom: 1px solid var(--line);
+  background: oklch(1 0 0 / 0.9);
+  padding: max(18px, env(safe-area-inset-top)) 16px 12px;
+  backdrop-filter: blur(14px);
+}
+
+.style-gallery-header {
+  width: min(var(--max), 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  margin: 0 auto;
+}
+
+.style-gallery-header h2 {
+  max-width: none;
+  font-size: 1.75rem;
+}
+
+.style-gallery-header p:not(.section-note) {
+  max-width: 42rem;
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.style-gallery-close {
+  white-space: nowrap;
+}
+
+.style-gallery-filters {
+  width: min(var(--max), 100%);
+  display: flex;
+  gap: 8px;
+  margin: 14px auto 0;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.style-gallery-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.style-filter {
+  min-height: 38px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: oklch(1 0 0 / 0.82);
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 800;
+  padding: 8px 13px;
+}
+
+.style-filter.is-active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+.style-gallery-scroller {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 16px 120px;
+}
+
+.reference-style-grid {
+  width: min(var(--max), 100%);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin: 0 auto;
+}
+
+.reference-style-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  border: 0;
+  border-radius: 14px;
+  background: oklch(1 0 0 / 0.94);
+  color: var(--ink);
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  box-shadow: 0 6px 12px oklch(0.26 0.04 52 / 0.1);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.reference-style-card:hover {
+  transform: translateY(-2px);
+}
+
+.reference-style-card[aria-pressed="true"] {
+  box-shadow:
+    inset 0 0 0 3px var(--primary),
+    0 7px 14px oklch(0.34 0.09 42 / 0.18);
+}
+
+.reference-style-card[aria-pressed="true"]::after {
+  content: "已选";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+  padding: 6px 9px;
+}
+
+.reference-style-card[hidden] {
+  display: none;
+}
+
+.reference-style-card img {
+  width: 100%;
+  height: clamp(210px, 42vw, 300px);
+  display: block;
+  border-radius: 10px;
+  background: oklch(0.985 0.004 62);
+  object-fit: contain;
+  object-position: top center;
+}
+
+.reference-style-card strong,
+.reference-style-card small {
+  display: block;
+}
+
+.reference-style-card small {
+  margin-top: 4px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.style-gallery-footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  background: oklch(1 0 0 / 0.94);
+  padding: 12px max(16px, calc((100vw - var(--max)) / 2)) max(12px, env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 18px oklch(0.26 0.04 52 / 0.1);
+  backdrop-filter: blur(14px);
+}
+
+.style-gallery-footer p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+body.gallery-open {
+  overflow: hidden;
 }
 
 .request-section {
@@ -954,6 +1157,14 @@ input[readonly] {
     grid-template-columns: 1fr;
   }
 
+  .style-heading-actions {
+    justify-items: stretch;
+  }
+
+  .style-gallery-trigger {
+    width: 100%;
+  }
+
   .hero {
     min-height: auto;
     gap: 28px;
@@ -1093,6 +1304,63 @@ input[readonly] {
 
   .mobile-action-bar {
     display: grid;
+  }
+
+  .style-gallery-header {
+    grid-template-columns: 1fr;
+  }
+
+  .style-gallery-header h2 {
+    font-size: 1.55rem;
+  }
+
+  .style-gallery-close {
+    width: 100%;
+  }
+
+  .style-gallery-scroller {
+    padding: 14px 12px 132px;
+  }
+
+  .reference-style-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .reference-style-card {
+    border-radius: 12px;
+    padding: 8px;
+  }
+
+  .reference-style-card img {
+    height: 220px;
+    border-radius: 9px;
+  }
+
+  .reference-style-card strong {
+    font-size: 0.94rem;
+    line-height: 1.25;
+  }
+
+  .reference-style-card small {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .reference-style-card[aria-pressed="true"]::after {
+    top: 12px;
+    right: 12px;
+    font-size: 0.72rem;
+    padding: 5px 7px;
+  }
+
+  .style-gallery-footer {
+    grid-template-columns: 1fr;
+    padding-inline: 12px;
+  }
+
+  .style-gallery-footer .button {
+    width: 100%;
   }
 }
 

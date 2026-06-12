@@ -120,7 +120,7 @@
           </p>
           <div class="hero-actions" aria-label="首屏功能入口">
             <a class="button button-secondary" href="#studio-advantages">了解工作室优势</a>
-            <a class="button button-secondary" href="#style-picker">选择参考风格</a>
+            <a class="button button-secondary" href="#style-picker" data-open-style-gallery>选择参考风格</a>
             <a class="button button-primary" href="#request-pack">立即提交需求</a>
           </div>
           <p class="trust-line">
@@ -253,9 +253,14 @@
             <p class="section-note">先选感觉，不用说术语</p>
             <h2 id="style-title">选择你喜欢的 PPT 参考风格</h2>
           </div>
-          <p>
-            可以勾选你喜欢的参考方向，我会根据你选择的风格进行设计。这个不是必填项，如果没有明确想法，也可以直接提交需求。
-          </p>
+          <div class="style-heading-actions">
+            <p>
+              可以勾选你喜欢的参考方向，我会根据你选择的风格进行设计。这个不是必填项，如果没有明确想法，也可以直接提交需求。
+            </p>
+            <button class="button button-primary style-gallery-trigger" type="button" data-open-style-gallery>
+              打开参考风格图库
+            </button>
+          </div>
         </div>
         <div class="style-carousel" aria-label="PPT定制参考风格">
           <button class="style-card" type="button" data-style="商务简约风" aria-pressed="false">
@@ -595,6 +600,135 @@
         </div>
       </section>
     </main>
+
+    <section
+      id="styleGallery"
+      class="style-gallery-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="styleGalleryTitle"
+      hidden
+    >
+      <div class="style-gallery-top">
+        <div class="style-gallery-header">
+          <div>
+            <p class="section-note">真实参考图，可多选</p>
+            <h2 id="styleGalleryTitle">参考风格图库</h2>
+            <p>点选接近你想要的画面方向，完成后会自动写入需求表单。</p>
+          </div>
+          <button class="button button-secondary style-gallery-close" type="button" data-close-style-gallery>
+            关闭图库
+          </button>
+        </div>
+        <div class="style-gallery-filters" aria-label="参考风格分类">
+          <button class="style-filter is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button class="style-filter" type="button" data-filter="culture" aria-pressed="false">国风文化</button>
+          <button class="style-filter" type="button" data-filter="business" aria-pressed="false">科技商业</button>
+          <button class="style-filter" type="button" data-filter="campus" aria-pressed="false">校园竞选</button>
+        </div>
+      </div>
+
+      <div class="style-gallery-scroller">
+        <div class="reference-style-grid" aria-label="PPT美化案例与参考风格">
+          <button class="reference-style-card" type="button" data-style="墨绿书画风" data-group="culture" aria-pressed="false">
+            <img src="assets/style-references/reference-01.jpg" alt="墨绿书画PPT参考图" loading="lazy" decoding="async" width="928" height="1200" />
+            <span>
+              <strong>墨绿书画风</strong>
+              <small>适合传统文化、书画主题、文旅介绍。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="数智科技蓝风" data-group="business" aria-pressed="false">
+            <img src="assets/style-references/reference-02.jpg" alt="科技蓝PPT参考图" loading="lazy" decoding="async" width="901" height="1200" />
+            <span>
+              <strong>数智科技蓝风</strong>
+              <small>适合 AI、数据平台、科研项目展示。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="蓝金国潮风" data-group="culture" aria-pressed="false">
+            <img src="assets/style-references/reference-03.jpg" alt="蓝金国潮PPT参考图" loading="lazy" decoding="async" width="839" height="1200" />
+            <span>
+              <strong>蓝金国潮风</strong>
+              <small>适合城市文化、主题宣讲、文旅项目。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="敦煌插画风" data-group="culture" aria-pressed="false">
+            <img src="assets/style-references/reference-04.jpg" alt="敦煌插画PPT参考图" loading="lazy" decoding="async" width="995" height="1200" />
+            <span>
+              <strong>敦煌插画风</strong>
+              <small>适合艺术文化、文创策划、传统主题。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="青绿山水风" data-group="culture" aria-pressed="false">
+            <img src="assets/style-references/reference-05.jpg" alt="青绿山水PPT参考图" loading="lazy" decoding="async" width="1033" height="1200" />
+            <span>
+              <strong>青绿山水风</strong>
+              <small>适合文旅、自然生态、校园文化展示。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="米色古典风" data-group="culture" aria-pressed="false">
+            <img src="assets/style-references/reference-06.jpg" alt="米色古典PPT参考图" loading="lazy" decoding="async" width="961" height="1200" />
+            <span>
+              <strong>米色古典风</strong>
+              <small>适合历史文化、文学主题、古风汇报。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="红黑产品发布风" data-group="business" aria-pressed="false">
+            <img src="assets/style-references/reference-07.jpg" alt="红黑产品发布PPT参考图" loading="lazy" decoding="async" width="1080" height="1164" />
+            <span>
+              <strong>红黑产品发布风</strong>
+              <small>适合产品介绍、品牌发布、商业展示。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="黑金影视路演风" data-group="business" aria-pressed="false">
+            <img src="assets/style-references/reference-08.jpg" alt="黑金影视路演PPT参考图" loading="lazy" decoding="async" width="1080" height="1195" />
+            <span>
+              <strong>黑金影视路演风</strong>
+              <small>适合影视项目、商业计划书、路演融资。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="红色校园竞选风" data-group="campus" aria-pressed="false">
+            <img src="assets/style-references/reference-09.jpg" alt="红色校园竞选PPT参考图" loading="lazy" decoding="async" width="1074" height="1200" />
+            <span>
+              <strong>红色校园竞选风</strong>
+              <small>适合学生会、社团竞选、荣誉展示。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="紫色校园竞选风" data-group="campus" aria-pressed="false">
+            <img src="assets/style-references/reference-10.jpg" alt="紫色校园竞选PPT参考图" loading="lazy" decoding="async" width="1076" height="1200" />
+            <span>
+              <strong>紫色校园竞选风</strong>
+              <small>适合个人展示、竞选汇报、成长经历。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="黑金商业计划风" data-group="business" aria-pressed="false">
+            <img src="assets/style-references/reference-11.jpg" alt="黑金商业计划书PPT参考图" loading="lazy" decoding="async" width="1080" height="1169" />
+            <span>
+              <strong>黑金商业计划风</strong>
+              <small>适合市场分析、项目融资、商业汇报。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="蓝色校园展示风" data-group="campus" aria-pressed="false">
+            <img src="assets/style-references/reference-12.jpg" alt="蓝色校园展示PPT参考图" loading="lazy" decoding="async" width="1070" height="1200" />
+            <span>
+              <strong>蓝色校园展示风</strong>
+              <small>适合校园竞选、组织活动、成果汇报。</small>
+            </span>
+          </button>
+          <button class="reference-style-card" type="button" data-style="绿色校园成长风" data-group="campus" aria-pressed="false">
+            <img src="assets/style-references/reference-13.jpg" alt="绿色校园成长PPT参考图" loading="lazy" decoding="async" width="1080" height="1198" />
+            <span>
+              <strong>绿色校园成长风</strong>
+              <small>适合社团竞选、个人履历、活动成果。</small>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="style-gallery-footer">
+        <p id="gallerySelectedCount">暂未选择，可先浏览再决定。</p>
+        <button class="button button-primary" type="button" data-close-style-gallery>完成选择</button>
+      </div>
+    </section>
 
     <footer class="site-footer">
       <div>

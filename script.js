@@ -4,6 +4,12 @@
   const selectedStyles = new Set();
 
   const styleButtons = Array.from(document.querySelectorAll(".style-card"));
+  const referenceStyleButtons = Array.from(document.querySelectorAll(".reference-style-card"));
+  const styleGallery = document.getElementById("styleGallery");
+  const openStyleGalleryButtons = Array.from(document.querySelectorAll("[data-open-style-gallery]"));
+  const closeStyleGalleryButtons = Array.from(document.querySelectorAll("[data-close-style-gallery]"));
+  const styleFilterButtons = Array.from(document.querySelectorAll(".style-filter"));
+  const gallerySelectedCount = document.getElementById("gallerySelectedCount");
   const selectedStylesText = document.getElementById("selectedStylesText");
   const selectedStylesInput = document.getElementById("selectedStylesInput");
   const requestForm = document.getElementById("requestForm");
@@ -19,6 +25,7 @@
   const sectionToggles = Array.from(document.querySelectorAll(".section-toggle"));
 
   let latestPackageName = "";
+  let lastFocusedElement = null;
 
   function getFormData() {
     const formData = new FormData(requestForm);
@@ -88,7 +95,58 @@
     const text = styles.length ? styles.join("、") : "暂未选择，可直接提交需求。";
     selectedStylesText.textContent = text;
     selectedStylesInput.value = styles.length ? styles.join("、") : "暂未选择";
+    [...styleButtons, ...referenceStyleButtons].forEach((button) => {
+      const isSelected = selectedStyles.has(button.dataset.style);
+      button.setAttribute("aria-pressed", String(isSelected));
+    });
+    if (gallerySelectedCount) {
+      gallerySelectedCount.textContent = styles.length
+        ? `已选择 ${styles.length} 个：${styles.join("、")}`
+        : "暂未选择，可先浏览再决定。";
+    }
     updateSummary();
+  }
+
+  function toggleStyle(style) {
+    if (!style) return;
+    if (selectedStyles.has(style)) {
+      selectedStyles.delete(style);
+    } else {
+      selectedStyles.add(style);
+    }
+    updateSelectedStyles();
+  }
+
+  function openStyleGallery(event) {
+    if (!styleGallery) return;
+    if (event) event.preventDefault();
+    lastFocusedElement = document.activeElement;
+    styleGallery.hidden = false;
+    document.body.classList.add("gallery-open");
+    const firstSelectedCard = referenceStyleButtons.find((button) => button.getAttribute("aria-pressed") === "true");
+    const firstFocusable = firstSelectedCard || referenceStyleButtons[0] || closeStyleGalleryButtons[0];
+    if (firstFocusable) firstFocusable.focus({ preventScroll: true });
+  }
+
+  function closeStyleGallery() {
+    if (!styleGallery) return;
+    styleGallery.hidden = true;
+    document.body.classList.remove("gallery-open");
+    if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+      lastFocusedElement.focus({ preventScroll: true });
+    }
+  }
+
+  function applyStyleFilter(filter) {
+    referenceStyleButtons.forEach((button) => {
+      button.hidden = filter !== "all" && button.dataset.group !== filter;
+    });
+
+    styleFilterButtons.forEach((button) => {
+      const isActive = button.dataset.filter === filter;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
   }
 
   function renderFiles() {
@@ -318,16 +376,58 @@ ${fileLines}
 
   styleButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      const style = button.dataset.style;
-      if (selectedStyles.has(style)) {
-        selectedStyles.delete(style);
-        button.setAttribute("aria-pressed", "false");
-      } else {
-        selectedStyles.add(style);
-        button.setAttribute("aria-pressed", "true");
-      }
-      updateSelectedStyles();
+      toggleStyle(button.dataset.style);
     });
+  });
+
+  referenceStyleButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      toggleStyle(button.dataset.style);
+    });
+  });
+
+  openStyleGalleryButtons.forEach((button) => {
+    button.addEventListener("click", openStyleGallery);
+  });
+
+  closeStyleGalleryButtons.forEach((button) => {
+    button.addEventListener("click", closeStyleGallery);
+  });
+
+  styleFilterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      applyStyleFilter(button.dataset.filter || "all");
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!styleGallery || styleGallery.hidden) return;
+
+    if (event.key === "Escape") {
+      closeStyleGallery();
+      return;
+    }
+
+    if (event.key === "Tab") {
+      const focusableElements = Array.from(
+        styleGallery.querySelectorAll(
+          'button:not([disabled]):not([hidden]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((element) => element.offsetParent !== null);
+
+      if (!focusableElements.length) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    }
   });
 
   conditionalControls.forEach((control) => {
