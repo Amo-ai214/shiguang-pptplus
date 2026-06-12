@@ -1,6 +1,6 @@
 (function () {
-  const studioEmail = "2455407376@qq.com";
-  const studioWechat = "1887844829";
+  const studioEmail = "2715904052@qq.com";
+  const studioWechat = "15307003711";
   const selectedStyles = new Set();
 
   const styleButtons = Array.from(document.querySelectorAll(".style-card"));
@@ -15,12 +15,15 @@
   const copyWechat = document.getElementById("copyWechat");
   const mobileCopyWechat = document.getElementById("mobileCopyWechat");
   const copyStatus = document.getElementById("copyStatus");
+  const conditionalControls = Array.from(document.querySelectorAll("[data-other-control]"));
+  const sectionToggles = Array.from(document.querySelectorAll(".section-toggle"));
 
   let latestPackageName = "";
 
   function getFormData() {
     const formData = new FormData(requestForm);
     const deliverables = formData.getAll("deliverables");
+    const deliverablesOther = clean(formData.get("deliverablesOther"));
     return {
       projectName: clean(formData.get("projectName")),
       contact: clean(formData.get("contact")),
@@ -28,8 +31,11 @@
       email: clean(formData.get("email")),
       contactTime: clean(formData.get("contactTime")),
       purpose: clean(formData.get("purpose")),
+      purposeOther: clean(formData.get("purposeOther")),
       materialStatus: clean(formData.get("materialStatus")),
+      materialStatusOther: clean(formData.get("materialStatusOther")),
       serviceType: clean(formData.get("serviceType")),
+      serviceTypeOther: clean(formData.get("serviceTypeOther")),
       pageCount: clean(formData.get("pageCount")),
       deadline: clean(formData.get("deadline")),
       urgency: clean(formData.get("urgency")),
@@ -42,6 +48,7 @@
       dislikedStyle: clean(formData.get("dislikedStyle")),
       brandRequirements: clean(formData.get("brandRequirements")),
       deliverables,
+      deliverablesOther,
       revisionConfirm: formData.get("revisionConfirm") === "on",
       files: Array.from(fileInput.files || [])
     };
@@ -62,6 +69,18 @@
     if (!bytes) return "0 KB";
     if (bytes < 1024 * 1024) return `${Math.ceil(bytes / 1024)} KB`;
     return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+  }
+
+  function withOther(value, otherValue) {
+    if (value === "其他" && otherValue) return `其他：${otherValue}`;
+    return value;
+  }
+
+  function getDeliverablesText(data) {
+    if (!data.deliverables.length) return "";
+    return data.deliverables
+      .map((item) => (item === "其他" && data.deliverablesOther ? `其他：${data.deliverablesOther}` : item))
+      .join("、");
   }
 
   function updateSelectedStyles() {
@@ -114,8 +133,8 @@
     summaryList.innerHTML = "";
     summaryList.append(
       setSummaryItem("项目", data.projectName || "待填写"),
-      setSummaryItem("用途", data.purpose || "待选择"),
-      setSummaryItem("服务", data.serviceType || "待选择"),
+      setSummaryItem("用途", withOther(data.purpose, data.purposeOther) || "待选择"),
+      setSummaryItem("服务", withOther(data.serviceType, data.serviceTypeOther) || "待选择"),
       setSummaryItem("截止", data.deadline ? data.deadline.replace("T", " ") : "待填写"),
       setSummaryItem("风格", styleText),
       setSummaryItem("资料", fileText)
@@ -137,9 +156,9 @@
 - 希望联系时间：${data.contactTime || "未填写"}
 
 ## PPT 信息
-- PPT 用途：${data.purpose || "未选择"}
-- 当前资料状态：${data.materialStatus || "未选择"}
-- 服务需求：${data.serviceType || "未选择"}
+- PPT 用途：${withOther(data.purpose, data.purposeOther) || "未选择"}
+- 当前资料状态：${withOther(data.materialStatus, data.materialStatusOther) || "未选择"}
+- 服务需求：${withOther(data.serviceType, data.serviceTypeOther) || "未选择"}
 - 预计页数：${data.pageCount || "未填写"}
 - 截止时间：${data.deadline ? data.deadline.replace("T", " ") : "未填写"}
 - 是否加急：${data.urgency || "未选择"}
@@ -157,7 +176,7 @@
 - 学校、公司、比赛、品牌色要求：${data.brandRequirements || "未填写"}
 
 ## 交付相关
-- 需要的交付格式：${data.deliverables.length ? data.deliverables.join("、") : "未选择"}
+- 需要的交付格式：${getDeliverablesText(data) || "未选择"}
 - 修改范围确认：${data.revisionConfirm ? "已确认" : "未确认"}
 
 ## 上传文件清单
@@ -185,8 +204,8 @@ ${fileLines}
       "你好，我已在拾光工作室网站生成 PPT 需求包。",
       "",
       `项目名称：${data.projectName || "未填写"}`,
-      `PPT 用途：${data.purpose || "未选择"}`,
-      `服务需求：${data.serviceType || "未选择"}`,
+      `PPT 用途：${withOther(data.purpose, data.purposeOther) || "未选择"}`,
+      `服务需求：${withOther(data.serviceType, data.serviceTypeOther) || "未选择"}`,
       `预计页数：${data.pageCount || "未填写"}`,
       `截止时间：${data.deadline ? data.deadline.replace("T", " ") : "未填写"}`,
       `微信号：${data.wechat || "未填写"}`,
@@ -205,6 +224,35 @@ ${fileLines}
     formStatus.textContent = message;
     formStatus.classList.remove("success", "error");
     if (type) formStatus.classList.add(type);
+  }
+
+  function updateConditionalField(control) {
+    const target = document.getElementById(control.dataset.otherControl);
+    if (!target) return;
+
+    const shouldShow = control.type === "checkbox" ? control.checked : control.value === "其他";
+    const input = target.querySelector("input, textarea, select");
+    target.hidden = !shouldShow;
+    if (input) {
+      input.required = shouldShow;
+      if (!shouldShow) input.value = "";
+    }
+  }
+
+  function setSectionExpanded(button, expanded) {
+    const target = document.getElementById(button.dataset.toggleTarget);
+    if (!target) return;
+
+    target.classList.toggle("is-collapsed", !expanded);
+    button.setAttribute("aria-expanded", String(expanded));
+    button.textContent = expanded ? button.dataset.openLabel : button.dataset.closedLabel;
+  }
+
+  function initializeMobileCollapsibles() {
+    const shouldCollapse = window.matchMedia("(max-width: 680px)").matches;
+    sectionToggles.forEach((button) => {
+      setSectionExpanded(button, !shouldCollapse);
+    });
   }
 
   async function createZipPackage(event) {
@@ -282,6 +330,21 @@ ${fileLines}
     });
   });
 
+  conditionalControls.forEach((control) => {
+    control.addEventListener("change", () => {
+      updateConditionalField(control);
+      updateSummary();
+    });
+    updateConditionalField(control);
+  });
+
+  sectionToggles.forEach((button) => {
+    button.addEventListener("click", () => {
+      const expanded = button.getAttribute("aria-expanded") !== "true";
+      setSectionExpanded(button, expanded);
+    });
+  });
+
   requestForm.addEventListener("input", updateSummary);
   requestForm.addEventListener("change", updateSummary);
   requestForm.addEventListener("submit", createZipPackage);
@@ -289,6 +352,7 @@ ${fileLines}
   copyWechat.addEventListener("click", copyWechatNumber);
   mobileCopyWechat.addEventListener("click", copyWechatNumber);
 
+  initializeMobileCollapsibles();
   updateSelectedStyles();
   renderFiles();
 })();

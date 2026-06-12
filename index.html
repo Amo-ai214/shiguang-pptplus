@@ -93,7 +93,9 @@
   <body>
     <header class="site-header" aria-label="顶部导航">
       <a class="brand-mark" href="#top" aria-label="返回首页">
-        <span class="brand-seal">拾</span>
+        <span class="brand-logo" aria-hidden="true">
+          <img src="assets/logo.png" alt="" />
+        </span>
         <span>
           <strong>拾光工作室</strong>
           <small>PPT 视觉表达与美化定制</small>
@@ -111,7 +113,7 @@
       <section class="hero section-shell" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="section-note">拾光工作室 · PPT 视觉表达与美化定制</p>
-          <h1 id="hero-title">把普通 PPT，做成有品位的表达</h1>
+          <h1 id="hero-title">把普通 PPT，做成有品味的表达</h1>
           <p class="hero-subtitle">
             选择风格、上传资料、填写要求，一次性把 PPT 需求打包发给拾光工作室。
           </p>
@@ -154,8 +156,19 @@
         <div class="section-heading">
           <p class="section-note">常见卡点</p>
           <h2 id="problem-title">你的 PPT 问题，通常不是“不会做”，而是缺少清晰表达</h2>
+          <button
+            class="section-toggle"
+            type="button"
+            data-toggle-target="problem-content"
+            data-open-label="收起常见问题"
+            data-closed-label="展开常见问题"
+            aria-controls="problem-content"
+            aria-expanded="true"
+          >
+            收起常见问题
+          </button>
         </div>
-        <div class="problem-list">
+        <div id="problem-content" class="collapsible-content problem-list">
           <article>
             <span>资料很多</span>
             <p>不知道怎么整理，页面堆满文字和截图。</p>
@@ -187,8 +200,19 @@
         <div class="section-heading">
           <p class="section-note">适合什么需求</p>
           <h2 id="advantages-title">为什么选择拾光工作室</h2>
+          <button
+            class="section-toggle"
+            type="button"
+            data-toggle-target="advantages-content"
+            data-open-label="收起工作室优势"
+            data-closed-label="展开工作室优势"
+            aria-controls="advantages-content"
+            aria-expanded="true"
+          >
+            收起工作室优势
+          </button>
         </div>
-        <div class="advantage-grid">
+        <div id="advantages-content" class="collapsible-content advantage-grid">
           <article>
             <span>旧稿美化</span>
             <h3>旧 PPT 不好看，先救回来</h3>
@@ -324,7 +348,7 @@
               <div class="form-grid">
                 <label>
                   PPT 用途
-                  <select name="purpose" required>
+                  <select name="purpose" data-other-control="purposeOtherWrap" required>
                     <option value="">请选择</option>
                     <option>课堂汇报</option>
                     <option>答辩</option>
@@ -337,9 +361,13 @@
                     <option>其他</option>
                   </select>
                 </label>
+                <label id="purposeOtherWrap" class="conditional-field" hidden>
+                  请补充 PPT 用途
+                  <input name="purposeOther" type="text" placeholder="例如：社团招新宣讲 / 个人作品集展示" />
+                </label>
                 <label>
                   当前资料状态
-                  <select name="materialStatus" required>
+                  <select name="materialStatus" data-other-control="materialStatusOtherWrap" required>
                     <option value="">请选择</option>
                     <option>已有完整 PPT，只需要美化</option>
                     <option>有 Word 或文档，需要整理成 PPT</option>
@@ -348,9 +376,13 @@
                     <option>其他</option>
                   </select>
                 </label>
+                <label id="materialStatusOtherWrap" class="conditional-field" hidden>
+                  请补充资料状态
+                  <input name="materialStatusOther" type="text" placeholder="例如：只有目录和几张参考图" />
+                </label>
                 <label>
                   服务需求
-                  <select name="serviceType" required>
+                  <select name="serviceType" data-other-control="serviceTypeOtherWrap" required>
                     <option value="">请选择</option>
                     <option>整套 PPT 定制</option>
                     <option>已有 PPT 美化</option>
@@ -360,6 +392,10 @@
                     <option>演讲稿或讲稿辅助</option>
                     <option>其他</option>
                   </select>
+                </label>
+                <label id="serviceTypeOtherWrap" class="conditional-field" hidden>
+                  请补充服务需求
+                  <input name="serviceTypeOther" type="text" placeholder="例如：只做封面和目录页" />
                 </label>
                 <label>
                   预计页数
@@ -437,8 +473,12 @@
                 <label><input type="checkbox" name="deliverables" value="PDF 预览" /> PDF 预览</label>
                 <label><input type="checkbox" name="deliverables" value="图片版" /> 图片版</label>
                 <label><input type="checkbox" name="deliverables" value="演讲稿" /> 演讲稿</label>
-                <label><input type="checkbox" name="deliverables" value="其他" /> 其他</label>
+                <label><input type="checkbox" name="deliverables" value="其他" data-other-control="deliverablesOtherWrap" /> 其他</label>
               </div>
+              <label id="deliverablesOtherWrap" class="conditional-field" hidden>
+                请补充其他交付格式
+                <input name="deliverablesOther" type="text" placeholder="例如：Keynote / 16:9 图片长图 / 源素材包" />
+              </label>
               <label class="file-drop">
                 <span>上传资料</span>
                 <small>支持 PPT、Word、PDF、图片、压缩包等常见资料，可多选。</small>
@@ -507,7 +547,7 @@
         </div>
         <div class="contact-card">
           <span>微信号 / 手机</span>
-          <strong>1887844829</strong>
+          <strong>15307003711</strong>
           <button id="copyWechat" class="button button-primary" type="button">复制微信号</button>
           <p id="copyStatus" role="status" aria-live="polite">复制后打开微信添加，沟通页数、时间和报价。</p>
         </div>
@@ -561,8 +601,8 @@
         <p>PPT 视觉表达与美化定制</p>
       </div>
       <div class="footer-contact">
-        <a href="mailto:2455407376@qq.com">2455407376@qq.com</a>
-        <span>微信 / 手机：1887844829</span>
+        <a href="mailto:2715904052@qq.com">2715904052@qq.com</a>
+        <span>微信 / 手机：15307003711</span>
         <a class="button button-primary" href="#request-pack">立即提交需求</a>
       </div>
     </footer>
