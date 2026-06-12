@@ -548,59 +548,15 @@ h3 {
   padding: 4px 8px;
 }
 
-.style-visual {
-  display: block;
+.style-card img {
   width: 100%;
-  aspect-ratio: 1.55;
+  height: 210px;
+  display: block;
   border-radius: 10px;
-  overflow: hidden;
+  background: oklch(0.985 0.004 62);
   margin-bottom: 14px;
-}
-
-.style-business {
-  background:
-    linear-gradient(90deg, oklch(0.98 0.005 62) 0 56%, transparent 56%),
-    linear-gradient(135deg, oklch(0.51 0.03 260), oklch(0.86 0.02 250));
-}
-
-.style-tech {
-  background:
-    radial-gradient(circle at 78% 30%, oklch(0.78 0.16 235), transparent 28%),
-    linear-gradient(135deg, oklch(0.31 0.11 250), oklch(0.68 0.13 230));
-}
-
-.style-roadshow {
-  background:
-    linear-gradient(135deg, oklch(0.24 0.04 55), oklch(0.54 0.12 42)),
-    var(--primary);
-}
-
-.style-education {
-  background:
-    radial-gradient(circle at 20% 28%, oklch(0.93 0.1 150), transparent 28%),
-    linear-gradient(135deg, oklch(0.98 0.018 150), oklch(0.78 0.08 190));
-}
-
-.style-red {
-  background:
-    linear-gradient(135deg, oklch(0.48 0.16 28), oklch(0.82 0.12 68));
-}
-
-.style-chinese {
-  background:
-    radial-gradient(circle at 75% 32%, oklch(0.8 0.08 82), transparent 24%),
-    linear-gradient(135deg, oklch(0.96 0.02 92), oklch(0.48 0.07 92));
-}
-
-.style-trend {
-  background:
-    radial-gradient(circle at 72% 32%, oklch(0.76 0.18 330), transparent 28%),
-    linear-gradient(135deg, oklch(0.76 0.15 205), oklch(0.88 0.13 88));
-}
-
-.style-minimal {
-  background:
-    linear-gradient(90deg, oklch(0.18 0.01 60) 0 42%, oklch(0.96 0 0) 42%);
+  object-fit: contain;
+  object-position: top center;
 }
 
 .style-card strong,
