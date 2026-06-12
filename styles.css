@@ -103,7 +103,7 @@ summary {
   flex: 0 0 auto;
   border-radius: 10px;
   overflow: hidden;
-  background: oklch(0.11 0 0);
+  background: oklch(0.91 0.055 148);
 }
 
 .brand-logo img {
